@@ -1,6 +1,6 @@
 {
   "name": "kontainer-di-config",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Setup kontainer-di through configuration",
   "main": "index.js",
   "scripts": {

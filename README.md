@@ -17,13 +17,13 @@ var di = require('kontainer-di-config')(diConfig, dirname);
 
 ```json
 {
-  "knexConfig": {"./config/knex.json":   []},
-  "knex":       {"./services/knex":      ["knexConfig"]},
-  "bookshelf":  {"./services/bookshelf": ["knex"]},
+  "knex.config": {"./config/knex.json":   []},
+  "knex":        {"./services/knex":      ["knex.config"]},
+  "bookshelf":   {"./services/bookshelf": ["knex"]},
 
   "user.model":      {"./models/user":   ["bookshelf"]},
-  "user.collection": {"./models/users":  ["bookshelf", "m.user"]},
-  "user.service":    {"./services/user": ["m.user", "m.users"]}
+  "user.collection": {"./models/users":  ["bookshelf", "user.model"]},
+  "user.service":    {"./services/user": ["user.model", "user.collection"]}
 }
 ```
 
