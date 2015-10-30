@@ -10,7 +10,7 @@ $ npm install kontainer-di-config --save
 ## Usage
 
 ```js
-var di = require('kontainer-di-config')(diConfig, __dirname);
+var di = require('kontainer-di-config')(diConfig, dirname);
 ```
 
 ### Sample config
@@ -21,35 +21,48 @@ var di = require('kontainer-di-config')(diConfig, __dirname);
   "knex":       {"./services/knex":      ["knexConfig"]},
   "bookshelf":  {"./services/bookshelf": ["knex"]},
 
-  "user.model":       {"./models/user":       ["bookshelf"]},
-  "user.collection":  {"./models/users":      ["bookshelf", "m.user"]},
-  "user.service":     {"./services/user":     ["m.user", "m.users"]}
-
-  ...
+  "user.model":      {"./models/user":   ["bookshelf"]},
+  "user.collection": {"./models/users":  ["bookshelf", "m.user"]},
+  "user.service":    {"./services/user": ["m.user", "m.users"]}
 }
 ```
 
 ### Example
 
 ```js
-var path = require('path');
 var getContainer = require('kontainer-di-config');
 var config = require('./config/di.json');
 
 var di = getContainer(config, __dirname);
+var userService;
+
+userService = di.get('user.service');
+userService.findAll().then( ... );
+
+// ...
 ```
 
-See the [example]() folder for a more complete example.
+See the [example](https://github.com/eightyfive/kontainer-di-config/tree/master/example) folder for a more complete example.
 
 ### `dirname` option (required)
 
-All relative paths are resolved from the `dirname` option. Meaning you may need to adjust the `dirname` option regarding from where you want to declare you dependencies in the config file/object:
+All relative paths given in config, are resolved from the `dirname` option. Meaning you may need to adjust the `dirname` option regarding from where you want to declare you dependencies in the config file/object:
 
 ```js
-var di = getContainer({ ... }, path.resolve(__dirname, 'src'));
+var config = {
+  "user": {"./src/models/user": ["bookshelf"]}
+};
+var di = getContainer(config, __dirname);
+
+// -- OR --
+
+var config = {
+  "user": {"./models/user": ["bookshelf"]}
+};
+var di = getContainer(config, path.resolve(__dirname, 'src'));
 ```
 
-You can also browse the source code to get a better idea of this.
+You can also browse the [source code](https://github.com/eightyfive/kontainer-di-config/blob/master/index.js) to get a better idea of this.
 
 ## Todo
 
