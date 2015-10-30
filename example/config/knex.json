@@ -1,0 +1,10 @@
+{
+  "client": "pg",
+  "connection": {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "database": "databasename",
+    "charset": "UTF8_GENERAL_CI"
+  }
+}

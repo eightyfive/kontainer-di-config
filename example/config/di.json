@@ -1,0 +1,9 @@
+{
+  "knexConfig": {"./config/knex.json":   []},
+  "knex":       {"./services/knex":      ["knexConfig"]},
+  "bookshelf":  {"./services/bookshelf": ["knex"]},
+
+  "user.model":       {"./models/user":       ["bookshelf"]},
+  "user.collection":  {"./models/users":      ["bookshelf", "m.user"]},
+  "user.service":     {"./services/user":     ["m.user", "m.users"]}
+}
