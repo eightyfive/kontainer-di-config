@@ -17,23 +17,39 @@ var di = require('kontainer-di-config')(diConfig, dirname);
 
 ```json
 {
-  "knex.config": {"./config/knex.json":   []},
-  "knex":        {"./services/knex":      ["knex.config"]},
-  "bookshelf":   {"./services/bookshelf": ["knex"]},
+  "env": "prod", /* [1] */
+  "isDev": false, /* [2] */
+  "roles": ["admin", "user"], /* [3] */
+  "knex.config": {"client": "pg", ... }, /* [4] */
+  
+  "config.path": "./config/prod.json", /* [5] */
+  "config": "(./config/prod.json)", /* [6] */
 
-  "user.model":      {"./models/user":   ["bookshelf"]},
-  "user.collection": {"./models/users":  ["bookshelf", "user.model"]},
-  "user.service":    {"./services/user": ["user.model", "user.collection"]}
+  "knex": ["(knex)", "knex.config"], /* [7] */
+  "bookshelf": ["(bookshelf)", "knex"],
+
+  "user.model": ["(./models/user)", "bookshelf", "dep2", "dep3", ...], /* [8] */
+  "user.service": ["(./services/user)", "user.model"],
+  ...
 }
 ```
+
+1- You can register a `string` directly from the config
+2- Or a `boolean`...
+3- Or an `Array`.
+4- And of course an `object`!
+5- Here, this won't load/require the `json` file
+6- Here yes! (because it's wrapped between paranthesis, this is the way to `require` something)
+7- You can even `require` Node modules, as long as they follow the factory pattern (or don't have any dependency)
+8- Etc...
 
 ### Example
 
 ```js
-var getContainer = require('kontainer-di-config');
+var getKontainer = require('kontainer-di-config');
 var config = require('./config/di.json');
 
-var di = getContainer(config, __dirname);
+var di = getKontainer(config, __dirname);
 var userService;
 
 userService = di.get('user.service');
@@ -46,7 +62,7 @@ See the [example](https://github.com/eightyfive/kontainer-di-config/tree/master/
 
 ### `dirname` option (required)
 
-All relative paths given in config, are resolved from the `dirname` option. Meaning you may need to adjust the `dirname` option regarding from where you want to declare you dependencies in the config file/object:
+All "requirable" relative paths (between paranthesis) given in config, are resolved from the `dirname` option. Meaning you may need to adjust the `dirname` option regarding from where you want to declare you dependencies in the config file/object:
 
 ```js
 var config = {
@@ -63,8 +79,3 @@ var di = getContainer(config, path.resolve(__dirname, 'src'));
 ```
 
 You can also browse the [source code](https://github.com/eightyfive/kontainer-di-config/blob/master/index.js) to get a better idea of this.
-
-## Todo
-
-- Allow to declare json objects directly in di json config
-- Allow to type only a string when no dependencies

@@ -1,9 +1,18 @@
 {
-  "knex.config": {"./config/knex.json":   []},
-  "knex":        {"./services/knex":      ["knex.config"]},
-  "bookshelf":   {"./services/bookshelf": ["knex"]},
+  "knex.config": {
+    "client": "pg",
+    "connection": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "__databasename__",
+      "charset": "UTF8_GENERAL_CI"
+    }
+  },
+  "knex":        ["(knex)", "knex.config"],
+  "bookshelf":   ["(bookshelf)", "knex"],
 
-  "user.model":       {"./models/user":       ["bookshelf"]},
-  "user.collection":  {"./models/users":      ["bookshelf", "user.model"]},
-  "user.service":     {"./services/user":     ["user.model", "user.collection"]}
+  "user.model":       ["(./models/user)", "bookshelf"]},
+  "user.collection":  ["(./models/users)", "bookshelf", "user.model"],
+  "user.service":     ["(./services/user)", "user.model", "user.collection"]
 }

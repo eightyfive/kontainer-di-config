@@ -2,10 +2,10 @@
 
 module.exports = function(User, Users) {
   return {
-    find: function find(id) {
+    find: function(id) {
       return User.forge({'id': id}).fetch();
     },
-    findOneBySlug: function findAll() {
+    findAll: function() {
       return Users.forge().fetch();
     },
   };
