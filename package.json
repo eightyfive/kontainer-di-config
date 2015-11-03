@@ -12,8 +12,5 @@
   },
   "author": "Benoit Sagols",
   "license": "ISC",
-  "homepage": "https://github.com/eightyfive/kontainer-di-config",
-  "dependencies": {
-    "kontainer-di": "^0.9.8"
-  }
+  "homepage": "https://github.com/eightyfive/kontainer-di-config"
 }

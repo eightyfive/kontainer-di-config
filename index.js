@@ -1,18 +1,36 @@
 
 var path = require('path');
-var di = require('kontainer-di');
 
-function isModule(val) {
+function isDi(val) {
+  var keys;
+
+  if (!isObject(val)) {
+    return false;
+  }
+
+  keys = Object.keys(val);
+
   return (
-    typeof val === 'string' &&
-    val.indexOf('(') === 0 &&
-    val.indexOf(')') === val.length-1
+    keys.length === 1 &&
+    isFactory(keys[0]) && // di key?
+    Array.isArray(val[keys[0]]) // di deps?
   );
 }
 
-module.exports = function(config, dirname) {
-  var deps;
-  var val;
+function isFactory(val) {
+  return (
+    typeof val === 'string' &&
+    /^\(.+\)$/.test(val)
+  );
+}
+
+function isObject(obj) {
+  return typeof obj === 'object' && !Array.isArray(obj) && !!obj;
+}
+
+module.exports = function(di, config, dirname) {
+  var diDeps;
+  var diVal;
 
   if (!path.isAbsolute(dirname)) {
     throw new Error('`dirname` path must be absolute');
@@ -20,28 +38,27 @@ module.exports = function(config, dirname) {
 
   di.register('@', [], di);
 
-  Object.keys(config).forEach(function(key) {
-    if (
-      Array.isArray(config[key]) &&
-      isModule(config[key][0])
-    ) {
-      val = config[key].shift();
-      deps = config[key];
+  Object.keys(config).forEach(function(diKey) {
+    if (isDi(config[diKey])) {
+      Object.keys(config[diKey]).forEach(function(factory) {
+        diVal = factory;
+        diDeps  = config[diKey][factory];
+      });
     } else {
-      val = config[key];
-      deps = [];
+      diVal = config[diKey];
+      diDeps  = [];
     }
 
-    if (isModule(val)) {
-      val = val.slice(1,val.length-1);
+    if (isFactory(diVal)) {
+      diVal = diVal.slice(1,diVal.length-1);
 
-      if (val.indexOf('.') === 0) {
-        val = path.resolve(dirname, val);
+      if (diVal.indexOf('.') === 0) {
+        diVal = path.resolve(dirname, diVal);
       }
-      val = require(val);
+      diVal = require(diVal);
     }
 
-    di.register(key, deps, val);
+    di.register(diKey, diDeps, diVal);
   });
 
   return di;

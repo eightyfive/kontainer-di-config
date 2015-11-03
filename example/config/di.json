@@ -9,10 +9,10 @@
       "charset": "UTF8_GENERAL_CI"
     }
   },
-  "knex":        ["(knex)", "knex.config"],
-  "bookshelf":   ["(bookshelf)", "knex"],
+  "knex":        {"(knex)": ["knex.config"]},
+  "bookshelf":   {"(bookshelf)": ["knex"]},
 
-  "user.model":       ["(./models/user)", "bookshelf"]},
-  "user.collection":  ["(./models/users)", "bookshelf", "user.model"],
-  "user.service":     ["(./services/user)", "user.model", "user.collection"]
+  "user.model":       {"(./models/user)": ["bookshelf"]},
+  "user.collection":  {"(./models/users)": ["bookshelf", "user.model"]},
+  "user.service":     {"(./services/user)": ["user.model", "user.collection"]}
 }

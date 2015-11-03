@@ -10,12 +10,12 @@ $ npm install kontainer-di-config --save
 ## Usage
 
 ```js
-var di = require('kontainer-di-config')(diConfig, dirname);
+var di = require('kontainer-di-config')(require('kontainer-di'), diConfig, dirname);
 ```
 
-### Sample config
+### Sample `diConfig` object (required)
 
-```json
+```js
 {
   "env": "prod", /* [1] */
   "isDev": false, /* [2] */
@@ -25,40 +25,23 @@ var di = require('kontainer-di-config')(diConfig, dirname);
   "config.path": "./config/prod.json", /* [5] */
   "config": "(./config/prod.json)", /* [6] */
 
-  "knex": ["(knex)", "knex.config"], /* [7] */
-  "bookshelf": ["(bookshelf)", "knex"],
+  "knex": {"(knex)": ["knex.config"]}, /* [7] */
+  "bookshelf": {"(bookshelf)": ["knex"]},
 
-  "user.model": ["(./models/user)", "bookshelf", "dep2", "dep3", ...], /* [8] */
-  "user.service": ["(./services/user)", "user.model"],
+  "user.model": {"(./models/user)": ["bookshelf", "dep2", "dep3", ...]}, /* [8] */
+  "user.service": {"(./services/user)": ["user.model"]},
   ...
 }
 ```
 
-1- You can register a `string` directly from the config
-2- Or a `boolean`...
-3- Or an `Array`.
-4- And of course an `object`!
-5- Here, this won't load/require the `json` file
-6- Here yes! (because it's wrapped between paranthesis, this is the way to `require` something)
-7- You can even `require` Node modules, as long as they follow the factory pattern (or don't have any dependency)
-8- Etc...
-
-### Example
-
-```js
-var getKontainer = require('kontainer-di-config');
-var config = require('./config/di.json');
-
-var di = getKontainer(config, __dirname);
-var userService;
-
-userService = di.get('user.service');
-userService.findAll().then( ... );
-
-// ...
-```
-
-See the [example](https://github.com/eightyfive/kontainer-di-config/tree/master/example) folder for a more complete example.
+1. You can register a `string` directly from the config
+2. Or a `boolean`...
+3. Or an `Array`.
+4. And of course an `object`!
+5. Here, this won't load/require the `json` file
+6. Here yes! (because it's wrapped between paranthesis, this is the way to `require` something)
+7. You can even `require` Node modules, as long as they follow the factory pattern
+8. Etc...
 
 ### `dirname` option (required)
 
@@ -68,14 +51,33 @@ All "requirable" relative paths (between paranthesis) given in config, are resol
 var config = {
   "user": {"./src/models/user": ["bookshelf"]}
 };
-var di = getContainer(config, __dirname);
+var di = konfigure(kontainer, config, __dirname);
 
 // -- OR --
 
 var config = {
   "user": {"./models/user": ["bookshelf"]}
 };
-var di = getContainer(config, path.resolve(__dirname, 'src'));
+var di = konfigure(kontainer, config, path.resolve(__dirname, 'src'));
 ```
 
 You can also browse the [source code](https://github.com/eightyfive/kontainer-di-config/blob/master/index.js) to get a better idea of this.
+
+
+## Example
+
+```js
+var kontainer = require('kontainer-di');
+var konfigure = require('kontainer-di-config');
+var config    = require('./config/di.json');
+
+var di = konfigure(kontainer, config, __dirname);
+var userService;
+
+userService = di.get('user.service');
+userService.findAll().then( ... );
+
+// ...
+```
+
+See the [example](https://github.com/eightyfive/kontainer-di-config/tree/master/example) folder for the complete example.
