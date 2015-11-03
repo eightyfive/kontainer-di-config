@@ -80,4 +80,4 @@ userService.findAll().then( ... );
 // ...
 ```
 
-See the [example](https://github.com/eightyfive/kontainer-di-config/tree/master/example) folder for the complete example.
+Browse [example](https://github.com/eightyfive/kontainer-di-config/tree/master/example) folder for the complete example.
