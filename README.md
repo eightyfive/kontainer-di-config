@@ -13,7 +13,7 @@ $ npm install kontainer-di-config --save
 var di = require('kontainer-di-config')(require('kontainer-di'), diConfig, dirname);
 ```
 
-### Sample `diConfig` object (required)
+### Sample configuration (`diConfig`)
 
 ```js
 {
@@ -43,7 +43,7 @@ var di = require('kontainer-di-config')(require('kontainer-di'), diConfig, dirna
 7. You can even `require` Node modules, as long as they follow the factory pattern
 8. Etc...
 
-### `dirname` option (required)
+### `dirname` (required)
 
 All "requirable" relative paths (between paranthesis) given in config, are resolved from the `dirname` option. Meaning you may need to adjust the `dirname` option regarding from where you want to declare you dependencies in the config file/object:
 
