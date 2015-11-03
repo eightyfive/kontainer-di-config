@@ -13,7 +13,7 @@ $ npm install kontainer-di-config --save
 var di = require('kontainer-di-config')(require('kontainer-di'), diConfig, dirname);
 ```
 
-### Sample configuration (`diConfig`)
+### `diConfig` object (required)
 
 ```js
 {
